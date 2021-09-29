@@ -13,7 +13,6 @@ import retrofit2.http.*
 interface RetrofitService {
 
     @GET("recipes")
-
     fun getAllRecipes(@Header("Authorization") auth: String): Call<List<Recipe>>
 
     @POST("recipes")

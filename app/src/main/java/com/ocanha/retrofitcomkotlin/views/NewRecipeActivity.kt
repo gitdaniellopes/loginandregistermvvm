@@ -6,7 +6,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.ocanha.retrofitcomkotlin.databinding.ActivityNewRecipeBinding
+import com.ocanha.retrofitcomkotlin.datastore.SessionDataStore
 import com.ocanha.retrofitcomkotlin.model.Recipe
 import com.ocanha.retrofitcomkotlin.model.UserSession
 import com.ocanha.retrofitcomkotlin.repositories.RecipeRepository
@@ -15,12 +17,15 @@ import com.ocanha.retrofitcomkotlin.viewmodel.main.MainViewModel
 import com.ocanha.retrofitcomkotlin.viewmodel.main.MainViewModelFactory
 import com.ocanha.retrofitcomkotlin.viewmodel.newrecipe.NewRecipeViewModel
 import com.ocanha.retrofitcomkotlin.viewmodel.newrecipe.NewRecipeViewModelFactory
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class NewRecipeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNewRecipeBinding
     private lateinit var viewModel: NewRecipeViewModel
     private val retrofitService = RetrofitService.getInstance()
+    private lateinit var session: SessionDataStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +39,7 @@ class NewRecipeActivity : AppCompatActivity() {
             NewRecipeViewModel::class.java
         )
 
+        session = SessionDataStore(this)
         setupUi()
 
     }
@@ -110,7 +116,11 @@ class NewRecipeActivity : AppCompatActivity() {
 
                 loadingView.show()
                 fabNewRecipe.visibility = View.GONE
-                viewModel.saveRecipe(UserSession.getToken(), recipe)
+
+                //viewModel.saveRecipe(UserSession.getToken(), recipe)
+                lifecycleScope.launch {
+                viewModel.saveRecipe(session.token.first().orEmpty(), recipe)
+                }
 
             }
 
