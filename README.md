@@ -1,6 +1,3 @@
-![LIVE #014 - Login e Cadastro de Usuários com Back-end no seu app Android (Retrofit - MVVM - Kotlin)](http://i3.ytimg.com/vi/P8447kYoQoY/maxresdefault.jpg "LIVE #014 - Login e Cadastro de Usuários com Back-end no seu app Android (Retrofit - MVVM - Kotlin)")
-
-# LIVE #014 - Login e Cadastro de Usuários com Back-end no seu app Android (Retrofit - MVVM - Kotlin)
 
 Código fonte do projeto criado na live #014, ensinando como criar um sistema de cadastro e login com Retrofit, na arquitetura MVVM com Kotlin.
 
