@@ -4,26 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.lifecycleScope
 import com.ocanha.retrofitcomkotlin.databinding.ActivityLoginBinding
-import com.ocanha.retrofitcomkotlin.datastore.SessionDataStore
 import com.ocanha.retrofitcomkotlin.model.LoginRequest
 import com.ocanha.retrofitcomkotlin.repositories.UserRepository
 import com.ocanha.retrofitcomkotlin.rest.RetrofitService
 import com.ocanha.retrofitcomkotlin.utils.Validator
 import com.ocanha.retrofitcomkotlin.viewmodel.login.LoginViewModel
 import com.ocanha.retrofitcomkotlin.viewmodel.login.LoginViewModelFactory
-import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var _binding: ActivityLoginBinding
     private lateinit var viewModel: LoginViewModel
     private val retrofitService = RetrofitService.getInstance()
-    private lateinit var session: SessionDataStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +25,10 @@ class LoginActivity : AppCompatActivity() {
         setContentView(_binding.root)
 
         viewModel =
-            ViewModelProvider(this, LoginViewModelFactory(UserRepository(retrofitService))).get(
+            ViewModelProvider(this, LoginViewModelFactory(UserRepository(retrofitService), application)).get(
                 LoginViewModel::class.java
             )
-        session = SessionDataStore(this)
-
         setupUi()
-
     }
 
     private fun setupUi() = _binding.apply {
@@ -70,17 +61,12 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
-//        session.token.asLiveData().observe(this, Observer {
-//            val activity = if (it == null) LoginActivity::class.java else MainActivity::class.java
-//            startActivity(Intent(this, activity))
-//        })
-
         viewModel.success.observe(this, {
-            //UserSession.setToken(it.token)
-            lifecycleScope.launch {
-                session.saveToken(it.token)
-            }
+//            UserSession.setToken(it.token)
+//            lifecycleScope.launch {
+//                session.saveToken(it.token)
+//            }
+            viewModel.saveToken(it.token)
             startActivity(Intent(this, MainActivity::class.java))
         })
 
@@ -90,3 +76,8 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 }
+
+//        session.token.asLiveData().observe(this, Observer {
+//            val activity = if (it == null) LoginActivity::class.java else MainActivity::class.java
+//            startActivity(Intent(this, activity))
+//        })

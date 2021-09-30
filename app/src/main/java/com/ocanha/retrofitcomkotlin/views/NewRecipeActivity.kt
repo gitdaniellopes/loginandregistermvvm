@@ -34,7 +34,7 @@ class NewRecipeActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(
             this,
-            NewRecipeViewModelFactory(RecipeRepository(retrofitService))
+            NewRecipeViewModelFactory(RecipeRepository(retrofitService), application)
         ).get(
             NewRecipeViewModel::class.java
         )
@@ -119,7 +119,7 @@ class NewRecipeActivity : AppCompatActivity() {
 
                 //viewModel.saveRecipe(UserSession.getToken(), recipe)
                 lifecycleScope.launch {
-                viewModel.saveRecipe(session.token.first().orEmpty(), recipe)
+                viewModel.saveRecipe(viewModel.getToken(), recipe)
                 }
 
             }
